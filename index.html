@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>FATH Wellness Bot</title>
+  <style>
+    body { font-family: sans-serif; text-align: center; padding: 40px; }
+    textarea { width: 80%; height: 100px; }
+    button { padding: 10px 20px; margin-top: 20px; }
+    #result { margin-top: 20px; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1>🤖 FATHWellnessBot</h1>
+  <p>Assalam o Alaikum<br>Mein apka mood acha krne me apki kia madad kar sakta hn?</p>
+
+  <textarea id="input" placeholder="Apna mood likhein (e.g. I feel lost, I am happy)..."></textarea><br>
+  <button onclick="analyzeMood()">Check Mood</button>
+
+  <div id="result"></div>
+
+  <hr>
+  <p><b>📲 WhatsApp pe baat karni hai?</b></p>
+  <a href="https://wa.me/923333601263?text=Assalamualaikum%20mood%20check%20karna%20hai" target="_blank">
+    <button>WhatsApp Bot</button>
+  </a>
+
+  <p><b>💖 Free use karein, lekin agar pasand aaye to support karein:</b><br>EasyPaisa: <b>923333601263</b></p>
+
+  <script>
+    function analyzeMood() {
+      let text = document.getElementById('input').value.toLowerCase();
+      let result = "";
+
+      if (text.includes("sad") || text.includes("cry") || text.includes("unhappy")) {
+        result = "😢 Mood: Sad\nAdvice: Take deep breaths and talk to someone.";
+      } else if (text.includes("happy") || text.includes("excited") || text.includes("joy")) {
+        result = "😊 Mood: Happy\nAdvice: Keep spreading positivity!";
+      } else if (text.includes("bored") || text.includes("dull")) {
+        result = "😐 Mood: Bored\nAdvice: Try a hobby or take a short walk.";
+      } else if (text.includes("angry") || text.includes("frustrated")) {
+        result = "😠 Mood: Angry\nAdvice: Count to 10 and breathe deeply.";
+      } else if (text.includes("lost") || text.includes("depressed") || text.includes("empty")) {
+        result = "🥺 Mood: Depressed\nAdvice: You matter. Talk to a close one or take rest.";
+      } else {
+        result = "😐 Mood: Neutral\nAdvice: Write how you feel in more detail.";
+      }
+
+      document.getElementById('result').innerText = result;
+    }
+  </script>
+</body>
+</html>
