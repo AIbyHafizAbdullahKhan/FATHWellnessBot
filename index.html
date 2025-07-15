@@ -4,15 +4,35 @@
   <meta charset="UTF-8">
   <title>FATH Wellness Bot</title>
   <style>
-    body { font-family: sans-serif; text-align: center; padding: 40px; }
-    textarea { width: 80%; height: 100px; }
-    button { padding: 10px 20px; margin-top: 20px; }
-    #result { margin-top: 20px; font-weight: bold; white-space: pre-line; }
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      padding: 40px;
+      background: #f2f2f2;
+    }
+    textarea {
+      width: 80%;
+      height: 100px;
+      padding: 10px;
+      font-size: 16px;
+    }
+    button {
+      padding: 12px 25px;
+      font-size: 16px;
+      margin-top: 20px;
+      cursor: pointer;
+    }
+    #result {
+      margin-top: 25px;
+      font-size: 18px;
+      font-weight: bold;
+      white-space: pre-line;
+    }
   </style>
 </head>
 <body>
   <h1>🤖 FATHWellnessBot</h1>
-  <p>Assalam o Alaikum<br>Mein apka mood acha krne me apki kia madad kar sakta hn?</p>
+  <p>Assalam o Alaikum 👋<br>Mein apka mood acha krne me apki kya madad kar sakta hoon?</p>
 
   <textarea id="input" placeholder="Apna mood likhein (e.g. I feel lost, I am happy)..."></textarea><br>
   <button onclick="analyzeMood()">Check Mood</button>
@@ -28,18 +48,18 @@
       let text = document.getElementById('input').value.toLowerCase();
       let result = "";
 
-      if (text.includes("sad") || text.includes("cry") || text.includes("unhappy")) {
-        result = "😢 Mood: Sad\nAdvice: Take deep breaths and talk to someone.";
-      } else if (text.includes("happy") || text.includes("excited") || text.includes("joy")) {
-        result = "😊 Mood: Happy\nAdvice: Keep spreading positivity!";
-      } else if (text.includes("bored") || text.includes("dull")) {
-        result = "😐 Mood: Bored\nAdvice: Try a hobby or take a short walk.";
-      } else if (text.includes("angry") || text.includes("frustrated")) {
-        result = "😠 Mood: Angry\nAdvice: Count to 10 and breathe deeply.";
-      } else if (text.includes("lost") || text.includes("depressed") || text.includes("empty")) {
-        result = "🥺 Mood: Depressed\nAdvice: You matter. Talk to a close one or take rest.";
+      if (text.match(/(depressed|lost|empty|worthless|hopeless)/)) {
+        result = "🥺 Mood: Depressed\nAdvice: Aap zaroori hain. Thoda rest karein aur kisi apne se baat karein.";
+      } else if (text.match(/(angry|furious|frustrated|mad|rage)/)) {
+        result = "😠 Mood: Angry\nAdvice: 10 tak gin lijiye, gehri saans lein. Sab theek ho jayega.";
+      } else if (text.match(/(bored|dull|tired|lazy|nothing)/)) {
+        result = "😐 Mood: Bored\nAdvice: Thoda walk karein, ya apna koi favorite kaam shuru karein.";
+      } else if (text.match(/(happy|joyful|excited|glad|great)/)) {
+        result = "😊 Mood: Happy\nAdvice: Shukriya Allah ka aur dusron ko bhi khushi dein!";
+      } else if (text.match(/(sad|cry|unhappy|sorrow|down)/)) {
+        result = "😢 Mood: Sad\nAdvice: Rona bhi zaroori hota hai, lekin muskurana kabhi na bhoolna.";
       } else {
-        result = "😐 Mood: Neutral\nAdvice: Write how you feel in more detail.";
+        result = "😐 Mood: Neutral\nAdvice: Thoda aur detail me likhein taake behtar samajh saken.";
       }
 
       document.getElementById('result').innerText = result;
