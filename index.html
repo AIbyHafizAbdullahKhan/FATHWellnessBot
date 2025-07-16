@@ -1,69 +1,103 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>FATH Wellness Bot</title>
   <style>
     body {
-      font-family: sans-serif;
+      font-family: Arial, sans-serif;
       text-align: center;
+      background-color: #f5f5f5;
       padding: 40px;
-      background: #f2f2f2;
+    }
+    h1 {
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+    p {
+      font-size: 18px;
+      margin-top: 5px;
     }
     textarea {
       width: 80%;
       height: 100px;
       padding: 10px;
       font-size: 16px;
+      margin-top: 20px;
     }
     button {
       padding: 12px 25px;
       font-size: 16px;
       margin-top: 20px;
       cursor: pointer;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+    }
+    button:hover {
+      background-color: #0056b3;
     }
     #result {
-      margin-top: 25px;
+      margin-top: 30px;
       font-size: 18px;
       font-weight: bold;
       white-space: pre-line;
     }
+    .support {
+      margin-top: 40px;
+      font-size: 16px;
+    }
   </style>
 </head>
 <body>
-  <h1>🤖 FATHWellnessBot</h1>
-  <p>Assalam o Alaikum 👋<br>Mein apka mood acha krne me apki kya madad kar sakta hoon?</p>
 
-  <textarea id="input" placeholder="Apna mood likhein (e.g. I feel lost, I am happy)..."></textarea><br>
+  <h1>🤖 FATHWellnessBot</h1>
+  <p>Hello 👋<br>How can I help improve your mood today?</p>
+
+  <textarea id="input" placeholder="Type your feeling (e.g. I feel lost, I am happy)..."></textarea><br>
   <button onclick="analyzeMood()">Check Mood</button>
 
   <div id="result"></div>
 
-  <hr>
-  <p><b>💖 Free use karein, lekin agar pasand aaye to support karein:</b><br>
-     EasyPaisa: <b>923333601263</b></p>
+  <div class="support">
+    <hr>
+    <p><strong>💖 This tool is free — but if you like it, please consider supporting:</strong><br>
+    EasyPaisa: <strong>923333601263</strong></p>
+  </div>
 
   <script>
     function analyzeMood() {
-      let text = document.getElementById('input').value.toLowerCase();
+      const text = document.getElementById('input').value.toLowerCase();
       let result = "";
 
-      if (text.match(/(depressed|lost|empty|worthless|hopeless)/)) {
-        result = "🥺 Mood: Depressed\nAdvice: Aap zaroori hain. Thoda rest karein aur kisi apne se baat karein.";
-      } else if (text.match(/(angry|furious|frustrated|mad|rage)/)) {
-        result = "😠 Mood: Angry\nAdvice: 10 tak gin lijiye, gehri saans lein. Sab theek ho jayega.";
-      } else if (text.match(/(bored|dull|tired|lazy|nothing)/)) {
-        result = "😐 Mood: Bored\nAdvice: Thoda walk karein, ya apna koi favorite kaam shuru karein.";
-      } else if (text.match(/(happy|joyful|excited|glad|great)/)) {
-        result = "😊 Mood: Happy\nAdvice: Shukriya Allah ka aur dusron ko bhi khushi dein!";
-      } else if (text.match(/(sad|cry|unhappy|sorrow|down)/)) {
-        result = "😢 Mood: Sad\nAdvice: Rona bhi zaroori hota hai, lekin muskurana kabhi na bhoolna.";
+      if (text.match(/(depressed|empty|hopeless|worthless|can't go on|no reason|lost hope|dark inside|useless)/)) {
+        result = "🥺 Mood: Depressed\nAdvice: Please don’t carry the burden alone. Talk to someone — you matter more than you know.";
+      } else if (text.match(/(angry|furious|mad|irritated|pissed off|rage|boiling|snapped|annoyed)/)) {
+        result = "😠 Mood: Angry\nAdvice: Your feelings are valid. Take space and calm yourself before responding.";
+      } else if (text.match(/(bored|nothing to do|wasting time|lazy|loop|no fun|tired of routine|same thing everyday)/)) {
+        result = "😐 Mood: Bored\nAdvice: Break the loop! Try something different, even if it’s small.";
+      } else if (text.match(/(happy|excited|joyful|grateful|cheerful|feeling good|positive energy|life is good)/)) {
+        result = "😊 Mood: Happy\nAdvice: Keep shining. Pass on the good vibes to someone else today!";
+      } else if (text.match(/(sad|cry|tears|heavy heart|broken|heartbreak|missing|alone)/)) {
+        result = "😢 Mood: Sad\nAdvice: Feel it, express it. Sadness is human — healing begins with honesty.";
+      } else if (text.match(/(anxious|nervous|overthinking|panic|worried|scared|tight chest|heart racing|job|future|present|past)/)) {
+        result = "😟 Mood: Anxious\nAdvice: Focus on now. Take 3 deep breaths and write what’s in your control.";
+      } else if (text.match(/(confused|uncertain|not sure|no idea|lost path|doubt|stuck in decision|clueless)/)) {
+        result = "🤔 Mood: Confused\nAdvice: Write down what you know vs don’t. Small steps build clarity.";
+      } else if (text.match(/(burnout|drained|tired|exhausted|no energy|mentally tired|fed up|can't continue|brain fog)/)) {
+        result = "😓 Mood: Burnout\nAdvice: Take a real break. Do something that isn’t productive — just relaxing.";
+      } else if (text.match(/(motivated|driven|productive|focused|inspired|goal focused|disciplined|ready to win)/)) {
+        result = "💪 Mood: Motivated\nAdvice: That’s fire! Use this energy wisely and don’t overdo it.";
+      } else if (text.match(/(love|in love|romantic|thinking of someone|heart skips|butterflies|crush|deep feelings|missing my partner)/)) {
+        result = "❤️ Mood: Love\nAdvice: Love is beautiful, but don’t forget to love yourself first. Balance matters.";
       } else {
-        result = "😐 Mood: Neutral\nAdvice: Thoda aur detail me likhein taake behtar samajh saken.";
+        result = "😐 Mood: Neutral / Not Detected\nAdvice: Please write a few more words about how you feel.";
       }
 
       document.getElementById('result').innerText = result;
     }
   </script>
+
 </body>
 </html>
