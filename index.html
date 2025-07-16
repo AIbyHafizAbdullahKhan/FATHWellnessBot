@@ -2,102 +2,127 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>FATH Wellness Bot</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FATHWellnessBot - Mood Detector</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       text-align: center;
-      background-color: #f5f5f5;
-      padding: 40px;
-    }
-    h1 {
-      font-size: 32px;
-      margin-bottom: 10px;
-    }
-    p {
-      font-size: 18px;
-      margin-top: 5px;
+      background-color: #f0f8ff;
+      padding: 2rem;
     }
     textarea {
-      width: 80%;
+      width: 90%;
       height: 100px;
-      padding: 10px;
       font-size: 16px;
-      margin-top: 20px;
     }
-    button {
-      padding: 12px 25px;
+    select, button {
       font-size: 16px;
+      margin-top: 10px;
+    }
+    .response {
       margin-top: 20px;
-      cursor: pointer;
-      background-color: #007bff;
-      color: white;
-      border: none;
-      border-radius: 4px;
-    }
-    button:hover {
-      background-color: #0056b3;
-    }
-    #result {
-      margin-top: 30px;
-      font-size: 18px;
       font-weight: bold;
-      white-space: pre-line;
     }
-    .support {
-      margin-top: 40px;
-      font-size: 16px;
+    #donateBtn {
+      margin-top: 30px;
+      background-color: #ffcc00;
+      padding: 10px 20px;
+      font-size: 18px;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    #donateBtn img {
+      height: 20px;
+      vertical-align: middle;
+      margin-right: 8px;
     }
   </style>
 </head>
 <body>
+  <h1>FATHWellnessBot 🤖</h1>
+  <p>Type your feelings or use the mic:</p>
 
-  <h1>🤖 FATHWellnessBot</h1>
-  <p>Hello 👋<br>How can I help improve your mood today?</p>
+  <textarea id="userInput" placeholder="I feel lost, I’m anxious, I’m excited..."></textarea><br/>
 
-  <textarea id="input" placeholder="Type your feeling (e.g. I feel lost, I am happy)..."></textarea><br>
-  <button onclick="analyzeMood()">Check Mood</button>
+  <select id="language">
+    <option value="en">English</option>
+    <option value="ur">Urdu</option>
+    <option value="hi">Hindi</option>
+  </select>
 
-  <div id="result"></div>
+  <br/><br/>
+  <button onclick="detectMood()">Check Mood</button>
+  <button onclick="startVoice()">🎙️ Speak</button>
 
-  <div class="support">
-    <hr>
-    <p><strong>💖 This tool is free — but if you like it, please consider supporting:</strong><br>
-    EasyPaisa: <strong>923333601263</strong></p>
-  </div>
+  <div class="response" id="moodResponse"></div>
+  <div class="response" id="tipResponse"></div>
+
+  <button id="donateBtn" onclick="window.open('https://easypaisa.com.pk/')">
+    <img src="https://seeklogo.com/images/E/easypaisa-logo-64DBF83F70-seeklogo.com.png" alt="EasyPaisa Logo" />
+    Support on EasyPaisa
+  </button>
 
   <script>
-    function analyzeMood() {
-      const text = document.getElementById('input').value.toLowerCase();
-      let result = "";
+    const moodData = {
+      happy: {
+        phrases: ["i am happy", "feeling great", "so excited", "i’m joyful"],
+        tip: "Stay positive and keep spreading smiles!"
+      },
+      sad: {
+        phrases: ["i feel sad", "i’m down", "feeling low", "disappointed"],
+        tip: "It’s okay to be sad. Talk to a friend or write your feelings down."
+      },
+      anxious: {
+        phrases: ["i am anxious", "nervous", "worried", "stressed", "i feel pressure"],
+        tip: "Try deep breathing and remind yourself that you're doing your best."
+      },
+      depressed: {
+        phrases: ["i feel like nothing matters", "i am depressed", "everything is dark", "i give up"],
+        tip: "Please consider talking to a therapist or support group. You're not alone."
+      },
+      confused: {
+        phrases: ["i’m confused", "not sure what to do", "i’m lost", "don't know"],
+        tip: "Take a break. Re-evaluate your priorities. It will clear up."
+      },
+      love: {
+        phrases: ["i’m in love", "heart is full", "i like someone", "romantic"],
+        tip: "Enjoy the feeling, but don’t lose yourself. Balance emotions with logic."
+      },
+      burnout: {
+        phrases: ["i’m exhausted", "burned out", "no energy", "mentally tired"],
+        tip: "Take a day off. Rest isn’t a waste of time, it’s a need."
+      }
+    };
 
-      if (text.match(/(depressed|empty|hopeless|worthless|can't go on|no reason|lost hope|dark inside|useless)/)) {
-        result = "🥺 Mood: Depressed\nAdvice: Please don’t carry the burden alone. Talk to someone — you matter more than you know.";
-      } else if (text.match(/(angry|furious|mad|irritated|pissed off|rage|boiling|snapped|annoyed)/)) {
-        result = "😠 Mood: Angry\nAdvice: Your feelings are valid. Take space and calm yourself before responding.";
-      } else if (text.match(/(bored|nothing to do|wasting time|lazy|loop|no fun|tired of routine|same thing everyday)/)) {
-        result = "😐 Mood: Bored\nAdvice: Break the loop! Try something different, even if it’s small.";
-      } else if (text.match(/(happy|excited|joyful|grateful|cheerful|feeling good|positive energy|life is good)/)) {
-        result = "😊 Mood: Happy\nAdvice: Keep shining. Pass on the good vibes to someone else today!";
-      } else if (text.match(/(sad|cry|tears|heavy heart|broken|heartbreak|missing|alone)/)) {
-        result = "😢 Mood: Sad\nAdvice: Feel it, express it. Sadness is human — healing begins with honesty.";
-      } else if (text.match(/(anxious|nervous|overthinking|panic|worried|scared|tight chest|heart racing|job|future|present|past)/)) {
-        result = "😟 Mood: Anxious\nAdvice: Focus on now. Take 3 deep breaths and write what’s in your control.";
-      } else if (text.match(/(confused|uncertain|not sure|no idea|lost path|doubt|stuck in decision|clueless)/)) {
-        result = "🤔 Mood: Confused\nAdvice: Write down what you know vs don’t. Small steps build clarity.";
-      } else if (text.match(/(burnout|drained|tired|exhausted|no energy|mentally tired|fed up|can't continue|brain fog)/)) {
-        result = "😓 Mood: Burnout\nAdvice: Take a real break. Do something that isn’t productive — just relaxing.";
-      } else if (text.match(/(motivated|driven|productive|focused|inspired|goal focused|disciplined|ready to win)/)) {
-        result = "💪 Mood: Motivated\nAdvice: That’s fire! Use this energy wisely and don’t overdo it.";
-      } else if (text.match(/(love|in love|romantic|thinking of someone|heart skips|butterflies|crush|deep feelings|missing my partner)/)) {
-        result = "❤️ Mood: Love\nAdvice: Love is beautiful, but don’t forget to love yourself first. Balance matters.";
-      } else {
-        result = "😐 Mood: Neutral / Not Detected\nAdvice: Please write a few more words about how you feel.";
+    function detectMood() {
+      const input = document.getElementById('userInput').value.toLowerCase();
+      let detected = "neutral";
+      let tip = "Try to express a bit more about how you're feeling.";
+
+      for (const mood in moodData) {
+        if (moodData[mood].phrases.some(phrase => input.includes(phrase))) {
+          detected = mood.charAt(0).toUpperCase() + mood.slice(1);
+          tip = moodData[mood].tip;
+          break;
+        }
       }
 
-      document.getElementById('result').innerText = result;
+      document.getElementById("moodResponse").innerText = `Mood: ${detected}`;
+      document.getElementById("tipResponse").innerText = `Advice: ${tip}`;
+    }
+
+    function startVoice() {
+      const recognition = new(window.SpeechRecognition || window.webkitSpeechRecognition)();
+      recognition.lang = document.getElementById('language').value === 'ur' ? 'ur-PK' : 'en-US';
+      recognition.start();
+
+      recognition.onresult = function(event) {
+        document.getElementById("userInput").value = event.results[0][0].transcript;
+        detectMood();
+      };
     }
   </script>
-
 </body>
 </html>
