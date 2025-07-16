@@ -3,124 +3,147 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>FATHWellnessBot - Mood Detector</title>
+  <title>FATHWellnessBot - AI Mood Checker</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       text-align: center;
-      background-color: #f0f8ff;
       padding: 2rem;
+      background-color: #f4f4f4;
+    }
+    h1 {
+      color: #333;
+    }
+    #result {
+      margin-top: 1rem;
+      padding: 1rem;
+      border-radius: 10px;
+      background-color: #fff;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
     textarea {
-      width: 90%;
+      width: 80%;
       height: 100px;
-      font-size: 16px;
+      padding: 1rem;
+      font-size: 1rem;
     }
-    select, button {
-      font-size: 16px;
-      margin-top: 10px;
-    }
-    .response {
-      margin-top: 20px;
-      font-weight: bold;
-    }
-    #donateBtn {
-      margin-top: 30px;
-      background-color: #ffcc00;
-      padding: 10px 20px;
-      font-size: 18px;
+    button {
+      margin-top: 1rem;
+      padding: 0.8rem 1.5rem;
+      font-size: 1rem;
       border: none;
+      background-color: #007bff;
+      color: white;
+      border-radius: 8px;
       cursor: pointer;
-      border-radius: 5px;
     }
-    #donateBtn img {
-      height: 20px;
-      vertical-align: middle;
-      margin-right: 8px;
+    button:hover {
+      background-color: #0056b3;
+    }
+    #voiceInput {
+      margin-top: 1rem;
+    }
+    .donate {
+      margin-top: 2rem;
+      font-size: 1rem;
+    }
+    .donate a {
+      background-color: green;
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      text-decoration: none;
     }
   </style>
 </head>
 <body>
-  <h1>FATHWellnessBot 🤖</h1>
-  <p>Type your feelings or use the mic:</p>
+  <h1>FATHWellnessBot</h1>
+  <p>How are you feeling today? Type or use voice 👇</p>
 
-  <textarea id="userInput" placeholder="I feel lost, I’m anxious, I’m excited..."></textarea><br/>
-
-  <select id="language">
-    <option value="en">English</option>
-    <option value="ur">Urdu</option>
-    <option value="hi">Hindi</option>
-  </select>
-
-  <br/><br/>
+  <textarea id="inputText" placeholder="Type your mood or feeling here..."></textarea>
+  <br />
   <button onclick="detectMood()">Check Mood</button>
-  <button onclick="startVoice()">🎙️ Speak</button>
+  <button id="voiceInput" onclick="startVoiceInput()">🎤 Speak</button>
 
-  <div class="response" id="moodResponse"></div>
-  <div class="response" id="tipResponse"></div>
+  <div id="result"></div>
 
-  <button id="donateBtn" onclick="window.open('https://easypaisa.com.pk/')">
-    <img src="https://seeklogo.com/images/E/easypaisa-logo-64DBF83F70-seeklogo.com.png" alt="EasyPaisa Logo" />
-    Support on EasyPaisa
-  </button>
+  <div class="donate">
+    <p>If you like it, support via EasyPaisa:</p>
+    <a href="https://easypaisa.com.pk/" target="_blank">Donate via EasyPaisa</a>
+  </div>
 
   <script>
-    const moodData = {
-      happy: {
-        phrases: ["i am happy", "feeling great", "so excited", "i’m joyful"],
-        tip: "Stay positive and keep spreading smiles!"
-      },
-      sad: {
-        phrases: ["i feel sad", "i’m down", "feeling low", "disappointed"],
-        tip: "It’s okay to be sad. Talk to a friend or write your feelings down."
-      },
-      anxious: {
-        phrases: ["i am anxious", "nervous", "worried", "stressed", "i feel pressure"],
-        tip: "Try deep breathing and remind yourself that you're doing your best."
-      },
-      depressed: {
-        phrases: ["i feel like nothing matters", "i am depressed", "everything is dark", "i give up"],
-        tip: "Please consider talking to a therapist or support group. You're not alone."
-      },
-      confused: {
-        phrases: ["i’m confused", "not sure what to do", "i’m lost", "don't know"],
-        tip: "Take a break. Re-evaluate your priorities. It will clear up."
-      },
-      love: {
-        phrases: ["i’m in love", "heart is full", "i like someone", "romantic"],
-        tip: "Enjoy the feeling, but don’t lose yourself. Balance emotions with logic."
-      },
-      burnout: {
-        phrases: ["i’m exhausted", "burned out", "no energy", "mentally tired"],
-        tip: "Take a day off. Rest isn’t a waste of time, it’s a need."
-      }
-    };
-
     function detectMood() {
-      const input = document.getElementById('userInput').value.toLowerCase();
-      let detected = "neutral";
-      let tip = "Try to express a bit more about how you're feeling.";
+      const text = document.getElementById("inputText").value.toLowerCase();
+      const result = document.getElementById("result");
 
-      for (const mood in moodData) {
-        if (moodData[mood].phrases.some(phrase => input.includes(phrase))) {
-          detected = mood.charAt(0).toUpperCase() + mood.slice(1);
-          tip = moodData[mood].tip;
-          break;
+      const moods = [
+        {
+          keywords: ["happy", "excited", "joy", "glad"],
+          mood: "Happy 😊",
+          tip: "Keep smiling and share your positivity with others!"
+        },
+        {
+          keywords: ["sad", "unhappy", "down", "depressed", "lonely", "cry"],
+          mood: "Sad 😢",
+          tip: "Talk to a friend or take a short walk. It helps."
+        },
+        {
+          keywords: ["angry", "mad", "furious", "rage"],
+          mood: "Angry 😠",
+          tip: "Try deep breathing. Calm yourself first, then respond."
+        },
+        {
+          keywords: ["anxious", "nervous", "worried", "panic"],
+          mood: "Anxious 😟",
+          tip: "Take slow deep breaths. Everything will settle down."
+        },
+        {
+          keywords: ["bored", "nothing", "dull", "blank"],
+          mood: "Bored 😐",
+          tip: "Try something creative or fun to lift your mood."
+        },
+        {
+          keywords: ["love", "romantic", "crush", "affection"],
+          mood: "Love ❤️",
+          tip: "Share your feelings with someone special. It matters."
+        },
+        {
+          keywords: ["neutral", "okay", "fine", "alright"],
+          mood: "Neutral 😐",
+          tip: "Stay mindful. Keep tracking how you feel during the day."
         }
+      ];
+
+      let detected = "Neutral 😐";
+      let advice = "Please share a bit more about how you're feeling.";
+
+      for (let mood of moods) {
+        for (let word of mood.keywords) {
+          if (text.includes(word)) {
+            detected = mood.mood;
+            advice = mood.tip;
+            break;
+          }
+        }
+        if (detected !== "Neutral 😐") break;
       }
 
-      document.getElementById("moodResponse").innerText = `Mood: ${detected}`;
-      document.getElementById("tipResponse").innerText = `Advice: ${tip}`;
+      result.innerHTML = `<h3>Mood: ${detected}</h3><p><strong>Advice:</strong> ${advice}</p>`;
     }
 
-    function startVoice() {
-      const recognition = new(window.SpeechRecognition || window.webkitSpeechRecognition)();
-      recognition.lang = document.getElementById('language').value === 'ur' ? 'ur-PK' : 'en-US';
+    function startVoiceInput() {
+      const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+      recognition.lang = "en-US";
       recognition.start();
 
       recognition.onresult = function(event) {
-        document.getElementById("userInput").value = event.results[0][0].transcript;
+        document.getElementById("inputText").value = event.results[0][0].transcript;
         detectMood();
+      };
+
+      recognition.onerror = function() {
+        alert("Voice input failed. Try again.");
       };
     }
   </script>
